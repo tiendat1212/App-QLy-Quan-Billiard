@@ -3,7 +3,7 @@
 Phần mềm Quản lý quán Billiard được sử dụng nhằm mục đích phục vụ công tác quản lý quán, giúp việc theo dõi, nhận xét, tổ chức phát triển quán hàng ngày được nhanh gọn, chính xác và tiết kiệm thời gian, giúp cho quản lý dễ dàng nhận thấy được doanh thu và những ưu nhược điểm cần khắc phục. 
 #### Thành viên nhóm
 + Phạm Quang Huy   22010134
-+ Nguyễn Tiến Đạt   
++ Nguyễn Tiến Đạt  22010326 
 + Hà Tiến Quang 22010136
 + Phan Đình Khải
 ### Tính năng #
