@@ -5,7 +5,7 @@ Phần mềm Quản lý quán Billiard được sử dụng nhằm mục đích 
 + Phạm Quang Huy   22010134
 + Nguyễn Tiến Đạt  22010326 
 + Hà Tiến Quang 22010136
-+ Phan Đình Khải
++ Phan Đình Khải 22010452
 ### Tính năng #
 #### Quản lý thông tin nhân viên#
 + Thêm mới nhân viên
