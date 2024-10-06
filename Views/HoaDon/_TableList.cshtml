@@ -1,0 +1,27 @@
+﻿@model IEnumerable<QuanLyQuanBilliard.Models.EF.HoaDon>
+
+@foreach (var item in Model)
+{
+    <tr>
+        <td>@item.Ban?.TenBan</td>
+        <td>@item.GioBatDau.ToString(@"hh\:mm")</td>
+        <td>@item.GioKetThuc.ToString(@"hh\:mm")</td>
+        <td>@item.TongTien.ToString("#,0")</td>
+        <td>
+            <span class="badge
+                @(item.TrangThai == "Đã thanh toán" ? "bg-success" :
+                  item.TrangThai == "Chưa thanh toán" ? "bg-warning" : "")">
+                @item.TrangThai
+            </span>
+        </td>
+
+        <td>@item.NgayLap.ToString("dd/MM/yyyy HH:mm:ss")</td>
+        <td>
+            @if (item.TrangThai != "Đã thanh toán")
+            {
+                <button class="btn btn-success btn-xs" onclick="showInPopup('@Url.Action("CreateOrEdit", "HoaDon", new { id = item.HoaDonId })', 'Cập Nhật Hóa Đơn')">Cập Nhật</button>
+            }
+            <button class="btn btn-danger btn-xs" onclick="loadDeleteModal('@Url.Action("UpdStatus", "HoaDon", new { id = item.HoaDonId })')">Hóa Đơn</button>
+        </td>
+    </tr>
+}

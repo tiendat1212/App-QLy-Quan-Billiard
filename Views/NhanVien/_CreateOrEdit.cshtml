@@ -1,0 +1,51 @@
+﻿@model QuanLyQuanBilliard.Models.EF.NhanVien
+
+<form id="form-create-edit" asp-action="Save" method="post" onsubmit="return jQueryAjaxPost(this)">
+    <input type="hidden" asp-for="NhanVienId" />
+
+    <div class="form-group">
+        <label for="TenNhanVien">Tên Nhân Viên</label>
+        <input asp-for="TenNhanVien" class="form-control" required />
+    </div>
+
+    <div class="form-group">
+        <label for="NgaySinh">Ngày sinh</label>
+        <input asp-for="NgaySinh" class="form-control" type="date"
+               value="@(Model.NgaySinh != default ? Model.NgaySinh.ToString("yyyy-MM-dd") :DateTime.Now.AddYears(-18).ToString("yyyy-MM-dd"))"
+               required />
+    </div>
+
+    <div class="form-group">
+        <label for="SoDienThoai">Số Điện Thoại</label>
+        <input asp-for="SoDienThoai" class="form-control" type="tel" pattern="^(0[1-9]{1})([0-9]{8})$" placeholder="Nhập số điện thoại" required />
+        <small class="form-text text-muted">Vui lòng nhập số điện thoại theo định dạng: 0XXXXXXXXX (10 chữ số).</small>
+    </div>
+
+
+    <div class="form-group">
+        <label for="Email">Email</label>
+        <input asp-for="Email" class="form-control" type="email" />
+    </div>
+
+    <div class="form-group">
+        <label for="ChucVu">Chức Vụ</label>
+        <input asp-for="ChucVu" class="form-control" required />
+    </div>
+
+    <div class="form-group">
+        <label for="LuongCoBan">Lương Cơ Bản</label>
+        <input asp-for="LuongCoBan" class="form-control" type="number" step="1" required />
+    </div>
+
+    <div class="form-group">
+        <label for="NgayBatDauLam">Ngày Bắt Đầu Làm</label>
+        <input asp-for="NgayBatDauLam" class="form-control" type="date"
+               value="@(Model.NgayBatDauLam != default ? Model.NgayBatDauLam.ToString("yyyy-MM-dd") : DateTime.Now.ToString("yyyy-MM-dd"))"
+               required />
+    </div>
+
+    <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" onclick="closeModal()">Đóng</button>
+        <button type="submit" class="btn btn-primary">Lưu</button>
+    </div>
+</form>

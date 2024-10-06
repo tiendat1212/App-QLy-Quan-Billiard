@@ -1,0 +1,145 @@
+﻿@model IEnumerable<QuanLyQuanBilliard.Models.EF.NhanVien>
+@{
+    ViewData["Title"] = "Quản Lý Nhân Viên";
+}
+
+<div class="page-body">
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-sm-12">
+                <div class="card">
+                    <div class="card-header d-flex justify-content-between">
+                        <h5>Danh Sách Nhân Viên</h5>
+                        <button class="btn btn-primary" onclick="showInPopup('@Url.Action("CreateOrEdit", "NhanVien")', 'Thêm Nhân Viên')">Thêm Nhân Viên</button>
+                    </div>
+                    <div class="card-body">
+                        <div class="table-responsive product-table">
+                            <table class="display" id="basic-1">
+                                <thead>
+                                    <tr>
+                                        <th>Tên Nhân Viên</th>
+                                        <th>Ngày Sinh</th>
+                                        <th>Số Điện Thoại</th>
+                                        <th>Email</th>
+                                        <th>Chức Vụ</th>
+                                        <th>Lương Cơ Bản</th>
+                                        <th>Ngày Bắt Đầu Làm</th>
+                                        <th>Ngày Cập Nhật</th>
+                                        <th>Hành Động</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="tableBody">
+                                    @await Html.PartialAsync("_TableList", Model)
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Hộp thoại xác nhận xóa -->
+<div class="modal fade" id="deleteConfirmModal" tabindex="-1" aria-labelledby="deleteConfirmModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-sm">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="deleteConfirmModalLabel">Xác Nhận Xóa</h5>
+            </div>
+            <div class="modal-body">
+                <!-- Nội dung được tải qua AJAX -->
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Hộp thoại cho Tạo/Sửa -->
+<div class="modal fade" id="formModal" tabindex="-1" aria-labelledby="formModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="formModalLabel">Tiêu đề Modal</h5>
+            </div>
+            <div class="modal-body">
+                <!-- Nội dung được tải qua AJAX -->
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    // Hiện hộp thoại cho Tạo/Sửa
+    function showInPopup(url, title) {
+        $('#formModal .modal-title').html(title);
+        $.get(url, function (data) {
+            $('#formModal .modal-body').html(data);
+            $('#formModal').modal('show');
+        }).fail(function () {
+            showNotification('Tải nội dung không thành công. Vui lòng thử lại.', 'danger');
+        });
+    }
+
+    // Tải hộp thoại xác nhận xóa
+    function loadDeleteModal(url) {
+        $.get(url, function (data) {
+            $('#deleteConfirmModal .modal-body').html(data);
+            $('#deleteConfirmModal').modal('show');
+        }).fail(function () {
+            showNotification('Tải xác nhận xóa không thành công. Vui lòng thử lại.', 'danger');
+        });
+    }
+
+    // AJAX Post cho các biểu mẫu
+    function jQueryAjaxPost(form) {
+        $.ajax({
+            type: 'POST',
+            url: form.action,
+            data: $(form).serialize(),
+            success: function (response) {
+                if (response.isValid) {
+                    closeModal();
+                    loadTable();
+                    showNotification(response.message, 'success');
+                } else {
+                    showNotification(response.message, 'danger');
+                }
+            },
+            error: function (xhr, status, error) {
+                showNotification('Đã xảy ra lỗi: ' + error, 'danger');
+            }
+        });
+
+        return false;
+    }
+
+    // Tải lại nội dung bảng đã cập nhật
+    function loadTable() {
+        $.get('@Url.Action("GetTableList", "NhanVien")', function (data) {
+            $('#tableBody').html(data);
+        }).fail(function () {
+            showNotification('Tải dữ liệu bảng không thành công. Vui lòng thử lại.', 'danger');
+        });
+    }
+
+    // Hàm để đóng hộp thoại
+    function closeModal() {
+        $('#deleteConfirmModal').modal('hide');
+        $('#formModal').modal('hide');
+    }
+
+    // Hàm hiển thị thông báo
+    function showNotification(message, type) {
+        $('#notification')
+            .removeClass('alert-success alert-danger')
+            .addClass('alert-' + type)
+            .html(message)
+            .fadeIn();
+
+        // Tự động tắt thông báo sau 5 giây
+        setTimeout(function () {
+            $('#notification').fadeOut();
+        }, 1000);
+    }
+</script>
+

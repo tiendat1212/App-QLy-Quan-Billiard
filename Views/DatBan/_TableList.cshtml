@@ -1,0 +1,17 @@
+﻿@model IEnumerable<QuanLyQuanBilliard.Models.EF.Ban>
+
+@foreach (var item in Model)
+{
+    <div class="col-md-3 mb-3">
+        <input type="text" class="form-control @(item.TrangThai == "Trống" ? "bg-success" :
+                                                                    item.TrangThai == "Đang sử dụng" ? "bg-warning" :
+                                                                    item.TrangThai == "Đang hư hỏng" ? "bg-danger" : "")"
+               value="@item.TenBan" readonly />
+        <small class="form-text text-muted">Giá giờ: @item.GiaGio.ToString("#,0")</small>
+        <small class="form-text text-muted">Trạng Thái: @item.TrangThai</small>
+        <div class="mt-2">
+            <button class="btn btn-success btn-xs" onclick="showInPopup('@Url.Action("CreateOrEdit", "DatBan", new { id = item.BanId })', 'Cập Nhật Bàn')">Cập Nhật</button>
+            <button class="btn btn-danger btn-xs" onclick="loadDeleteModal('@Url.Action("UpdStatus", "DatBan", new { id = item.BanId })')">Thanh Toán</button>
+        </div>
+    </div>
+}

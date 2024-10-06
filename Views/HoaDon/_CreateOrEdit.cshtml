@@ -1,0 +1,91 @@
+﻿@model QuanLyQuanBilliard.Models.EF.HoaDon
+
+<form id="form-create-edit" asp-controller="HoaDon" asp-action="Save" method="post" onsubmit="return jQueryAjaxPost(this)">
+    <input type="hidden" asp-for="HoaDonId" id="HoaDonId" />
+
+    <div class="form-group">
+        <label for="NhanVienId">Mã Nhân Viên</label>
+        <select asp-for="NhanVienId" class="form-control" asp-items="@(new SelectList(ViewBag.NhanVienList, "NhanVienId", "TenNhanVien"))" required></select>
+    </div>
+
+    <div class="form-group">
+        <label for="BanId">Mã Bàn</label>
+        <select asp-for="BanId" id="BanId" class="form-control" asp-items="@(new SelectList(ViewBag.BanList, "BanId", "TenBan"))" required onchange="getGiaGio(this.value)"></select>
+    </div>
+
+    <div class="form-group">
+        <label for="GiaGio">Giá Giờ</label>
+        <input asp-for="GiaGio" id="GiaGio" class="form-control" type="number" step="1" readonly />
+    </div>
+    <div class="form-group">
+        <label for="GioBatDau">Giờ Bắt Đầu</label>
+        <input asp-for="GioBatDau" class="form-control" type="time" required />
+    </div>
+
+    <div class="form-group">
+        <label for="GioKetThuc">Giờ Kết Thúc</label>
+        <input asp-for="GioKetThuc" class="form-control" type="time" required />
+    </div>
+
+    <div class="form-group">
+        <label for="TheThanhVienId">Thành Viên</label>
+        <select asp-for="TheThanhVienId" class="form-control" asp-items="@(new SelectList(ViewBag.TheThanhVienList, "TheThanhVienId", "TenKhachHang", Model.TheThanhVienId))">
+            <option value="">-- Chọn Thành Viên --</option> 
+        </select>
+    </div>
+
+
+    <h3 class="d-flex justify-content-between">
+        Chi Tiết Hóa Đơn
+        <div class="form-group mb-0">
+            <label for="selectKho" class="sr-only">Chọn món</label>
+            <select id="selectKho" class="form-control" onchange="addItem()">
+                <option value="">Chọn món</option>
+                @foreach (var kho in ViewBag.KhoList)
+                {
+                    <option value="@kho.IdMatHang">@kho.TenMatHang</option>
+                }
+            </select>
+        </div>
+    </h3>
+
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Tên Món</th>
+                <th>Số Lượng</th>
+                <th>Đơn Giá</th>
+                <th>Thao Tác</th>
+            </tr>
+        </thead>
+        <tbody id="chiTietHoaDonTable">
+            @{
+                var hoaDonChiTietsList = Model.HoaDonChiTiets.ToList();
+            }
+            @for (int i = 0; i < hoaDonChiTietsList.Count; i++)
+            {
+                <tr id="row-@i">
+                    <td>
+                        @hoaDonChiTietsList[i].Kho?.TenMatHang
+                        <input type="hidden" name="hoaDonChiTiets[@i].IdKho" value="@hoaDonChiTietsList[i].IdKho" />
+                        <input type="hidden" class="form-control" name="hoaDonChiTiets[@i].GiaNhap" value="@hoaDonChiTietsList[i].GiaNhap" />
+                    </td>
+                    <td>
+                        <input type="number" class="form-control" name="hoaDonChiTiets[@i].SoLuong" value="@hoaDonChiTietsList[i].SoLuong" min="1" required onchange="checkStock(this, @hoaDonChiTietsList[i].Kho?.SoLuong)" />
+                    </td>
+                    <td>
+                        <input type="number" class="form-control" name="hoaDonChiTiets[@i].GiaBan" value="@hoaDonChiTietsList[i].GiaBan" min="1" readonly />
+                    </td>
+                    <td>
+                        <button type="button" class="btn btn-danger" onclick="removeItem(@i)">Xóa</button>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+
+    <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" onclick="closeModal()">Đóng</button>
+        <button type="submit" class="btn btn-primary">Lưu</button>
+    </div>
+</form>

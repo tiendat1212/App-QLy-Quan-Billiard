@@ -1,0 +1,16 @@
+﻿@model IEnumerable<QuanLyQuanBilliard.Models.EF.TaiKhoan>
+
+@foreach (var item in Model)
+{
+    <tr>
+        <td>@item.TenDangNhap</td>
+        <td>@item.TenQuyen</td>
+        <td>@item.NhanVien?.TenNhanVien</td>
+        <td>@item.NgayTao.ToString("dd/MM/yyyy")</td>
+        <td>@item.NgayCapNhap.ToString("dd/MM/yyyy")</td>
+        <td>
+            <button class="btn btn-success btn-xs" onclick="showInPopup('@Url.Action("CreateOrEdit", "TaiKhoan", new { id = item.TaiKhoanId })', 'Cập Nhật Tài Khoản')">Cập Nhật</button>
+            <button class="btn btn-danger btn-xs" onclick="loadDeleteModal('@Url.Action("Delete", "TaiKhoan", new { id = item.TaiKhoanId })')">Xóa</button>
+        </td>
+    </tr>
+}

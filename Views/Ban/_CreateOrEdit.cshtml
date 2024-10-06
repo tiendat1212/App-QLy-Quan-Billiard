@@ -1,0 +1,29 @@
+﻿@model QuanLyQuanBilliard.Models.EF.Ban
+
+<form id="form-create-edit" asp-action="Save" method="post" onsubmit="return jQueryAjaxPost(this)">
+    <input type="hidden" asp-for="BanId" />
+
+    <div class="form-group">
+        <label for="TenBan">Tên Bàn</label>
+        <input asp-for="TenBan" class="form-control" required />
+    </div>
+
+    <div class="form-group">
+        <label for="TrangThai">Trạng Thái</label>
+        <select asp-for="TrangThai" class="form-control" required>
+            <option value="Trống">Trống</option>
+            <option value="Đang sử dụng">Đang sử dụng</option>
+            <option value="Đang hư hỏng">Đang hư hỏng</option>
+        </select>
+    </div>
+
+    <div class="form-group">
+        <label for="GiaGio">Giá Theo Giờ</label>
+        <input asp-for="GiaGio" class="form-control" type="number" step="1" required />
+    </div>
+
+    <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" onclick="closeModal()">Đóng</button>
+        <button type="submit" class="btn btn-primary">Lưu</button>
+    </div>
+</form>

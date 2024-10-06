@@ -1,0 +1,28 @@
+﻿@model QuanLyQuanBilliard.Models.EF.TheThanhVien
+
+<form id="form-create-edit" asp-action="Save" method="post" onsubmit="return jQueryAjaxPost(this)">
+    <input type="hidden" asp-for="TheThanhVienId" />
+
+    <div class="form-group">
+        <label for="TenKhachHang">Tên Khách Hàng</label>
+        <input asp-for="TenKhachHang" class="form-control" required />
+    </div>
+
+    <div class="form-group">
+        <label for="SoDienThoai">Số Điện Thoại</label>
+        <input asp-for="SoDienThoai" class="form-control" type="tel" pattern="^(0[1-9]{1})([0-9]{8})$" placeholder="Nhập số điện thoại" required />
+        <small class="form-text text-muted">Vui lòng nhập số điện thoại theo định dạng: 0XXXXXXXXX (10 chữ số).</small>
+    </div>
+
+    <div class="form-group">
+        <label for="NgayBatDauLam">Ngày Đăng Ký</label>
+        <input asp-for="NgayDangKy" class="form-control" type="date"
+               value="@(Model.NgayDangKy != default ? Model.NgayDangKy.ToString("yyyy-MM-dd") : DateTime.Now.ToString("yyyy-MM-dd"))"
+               required />
+    </div>
+
+    <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" onclick="closeModal()">Đóng</button>
+        <button type="submit" class="btn btn-primary">Lưu</button>
+    </div>
+</form>

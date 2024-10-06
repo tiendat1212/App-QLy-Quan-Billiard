@@ -1,0 +1,104 @@
+﻿@model QuanLyQuanBilliard.Models.EF.HoaDon
+
+<form id="form-create-edit" asp-controller="HoaDon" asp-action="UpdStatusConfirmed" method="post" onsubmit="return jQueryAjaxPost(this)">
+    @{
+        long tongTienDichVu = 0;
+        var gioBatDau = Model.GioBatDau;
+        var gioKetThuc = Model.GioKetThuc;
+        var giaGio = Model.GiaGio;
+        var tongSoGio = (gioKetThuc - gioBatDau).TotalHours;
+        long tongTienBan = (long)Math.Round(tongSoGio * giaGio, 0);
+    }
+    <input type="hidden" asp-for="HoaDonId" />
+
+    <div class="row">
+        <div class="col-md-6">
+            <div class="form-group d-flex justify-content-between mb-1">
+                <label class="me-2 col-6 text-start">Thành Viên:</label>
+                <label class="col-6 text-end">@Model.TheThanhVien?.TenKhachHang</label>
+            </div>
+            <div class="form-group d-flex justify-content-between mb-1">
+                <label class="me-2 col-6 text-start">Bàn:</label>
+                <label class="col-6 text-end">@Model.Ban.TenBan</label>
+            </div>
+            <div class="form-group d-flex justify-content-between mb-1">
+                <label class="me-2 col-6 text-start">Giá Giờ:</label>
+                <label class="col-6 text-end">@Model.GiaGio.ToString("#,0")</label>
+            </div>
+            <div class="form-group d-flex justify-content-between mb-1">
+                <label class="me-2 col-6 text-start">Nhân Viên:</label>
+                <label class="col-6 text-end">@Model.NhanVien.TenNhanVien</label>
+            </div>
+        </div>
+
+        <div class="col-md-6">
+            <div class="form-group d-flex justify-content-between mb-1">
+                <label class="me-2 col-6 text-start">Giờ Bắt Đầu:</label>
+                <label class="col-6 text-end">@Model.GioBatDau.ToString(@"hh\:mm")</label>
+            </div>
+            <div class="form-group d-flex justify-content-between mb-1">
+                <label class="me-2 col-6 text-start">Giờ Kết Thúc:</label>
+                <label class="col-6 text-end">@Model.GioKetThuc.ToString(@"hh\:mm")</label>
+            </div>
+            <div class="form-group d-flex justify-content-between mb-1">
+                <label class="me-2 col-6 text-start">Tổng số giờ chơi:</label>
+                <label class="col-6 text-end">@tongSoGio</label>
+            </div>
+            <div class="form-group d-flex justify-content-between mb-1">
+                <label class="me-2 col-6 text-start">Ngày Lập:</label>
+                <label class="col-6 text-end">@Model.NgayLap.ToString("dd/MM/yyyy HH:mm:ss")</label>
+            </div>
+        </div>
+    </div>
+
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Tên Món</th>
+                <th>Số Lượng</th>
+                <th>Đơn Giá</th>
+                <th>Tổng Tiền</th>
+            </tr>
+        </thead>
+        <tbody id="chiTietHoaDonTable">
+            @foreach (var chiTiet in Model.HoaDonChiTiets)
+            {
+                var tongTienMatHang = chiTiet.GiaBan * chiTiet.SoLuong;
+                tongTienDichVu += tongTienMatHang;
+
+                <tr>
+                    <td>@chiTiet.Kho?.TenMatHang</td>
+                    <td>@chiTiet.SoLuong.ToString("#,0")</td>
+                    <td>@chiTiet.GiaBan.ToString("#,0")</td>
+                    <td>@tongTienMatHang.ToString("#,0")</td>
+                </tr>
+            }
+        </tbody>
+    </table>
+    <hr />
+    <div class="row">
+        <div class="col-6"></div>
+        <div class="col-6 text-end">
+            <div class="form-group d-flex justify-content-between mb-1">
+                <label class="me-2 col-6 text-start">Tiền bàn:</label>
+                <label class="col-6 text-end">@tongTienBan.ToString("#,0")</label>
+            </div>
+             <div class="form-group d-flex justify-content-between mb-1">
+                <label class="me-2 col-6 text-start">Tiền dịch vụ:</label>
+                <label class="col-6 text-end">@tongTienDichVu.ToString("#,0")</label>
+            </div>
+            <div class="form-group d-flex justify-content-between mb-1">
+                <label class="me-2 col-6 text-start">Tổng tiền:</label>
+                <label class="col-6 text-end">@((tongTienDichVu + tongTienBan).ToString("#,0"))</label>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" onclick="closeModal()">Đóng</button>
+        @if (Model.TrangThai != "Đã thanh toán")
+        {
+            <button type="submit" class="btn btn-primary" onclick="updateStatus()">Hoàn Thành</button>
+        }
+    </div>
+</form>

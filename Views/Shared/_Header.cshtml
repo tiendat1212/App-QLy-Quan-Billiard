@@ -1,0 +1,94 @@
+﻿@{
+    @using Microsoft.AspNetCore.Http
+    var tenDangNhap = Context.Session.GetString("TenDangNhap") ?? "Khách";
+    var tenQuyen = Context.Session.GetString("TenQuyen") ?? "Không xác định";
+    if (tenQuyen.Equals("Tiếp Tân"))
+    {
+        <div class="page-main-header open">
+            <div class="main-header-right row">
+                <div class="main-header-left d-lg-none">
+                    <div class="logo-wrapper"><a href="/Home/Index"><img src="~/assets/images/creative-logo1.png" alt=""></a></div>
+                </div>
+                <div class="nav-right col left-menu-header">
+                    <ul class="nav-menus-left">
+                        <li><a class="text-dark" href="#!" onclick="javascript:toggleFullScreen()"><i data-feather="maximize"></i></a></li>
+                    </ul>
+                    <div class="d-xl-none mobile-toggle-left pull-right"><i data-feather="more-horizontal"></i></div>
+                </div>
+                <div class="nav-right col pull-right right-menu">
+                    <ul class="nav-menus">
+                        <li>
+                            <div class="dropdown">
+                                <button class="btn dropdown-toggle" type="button" data-toggle="dropdown">
+                                    <span class="media user-header">
+                                        <img class="mr-2 rounded-circle" src="~/assets/images/dashboard/avt.jpg" alt="" width="35" height="35">
+                                        <span class="media-body">
+                                            <span class="f-12 f-w-600">@tenDangNhap</span>
+                                            <span class="d-block">@tenQuyen</span>
+                                        </span>
+                                    </span>
+                                </button>
+                                <div class="dropdown-menu p-0">
+                                    <ul class="profile-dropdown">
+                                        <li>
+                                            <a href="@Url.Action("DangXuat", "DangNhap")"><i data-feather="log-out"></i> Đăng xuất</a>
+                                        </li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </li>
+                    </ul>
+                </div>
+                <div class="d-lg-none mobile-toggle pull-right"><i data-feather="more-horizontal"></i></div>
+            </div>
+        </div>
+    }else
+    {
+        <div class="page-main-header">
+            <div class="main-header-right row">
+                <div class="main-header-left d-lg-none">
+                    <div class="logo-wrapper"><a href="index.html"><img src="~/assets/images/creative-logo1.png" alt=""></a></div>
+                </div>
+                <div class="mobile-sidebar d-block">
+                    <div class="media-body text-right switch-sm">
+                        <label class="switch">
+                            <input id="sidebar-toggle" type="checkbox" checked="checked"><span class="switch-state"></span>
+                        </label>
+                    </div>
+                </div>
+                <div class="vertical-mobile-sidebar"><i class="fa fa-bars sidebar-bar"></i></div>
+                <div class="nav-right col left-menu-header">
+                    <ul class="nav-menus-left">
+                        <li><a class="text-dark" href="#!" onclick="javascript:toggleFullScreen()"><i data-feather="maximize"></i></a></li>
+                    </ul>
+                    <div class="d-xl-none mobile-toggle-left pull-right"><i data-feather="more-horizontal"></i></div>
+                </div>
+                <div class="nav-right col pull-right right-menu">
+                    <ul class="nav-menus">
+                        <li>
+                            <div class="dropdown">
+                                <button class="btn dropdown-toggle" type="button" data-toggle="dropdown">
+                                    <span class="media user-header">
+                                        <img class="mr-2 rounded-circle" src="~/assets/images/dashboard/avt.jpg" alt="" width="35" height="35">
+                                        <span class="media-body">
+                                            <span class="f-12 f-w-600">@tenDangNhap</span>
+                                            <span class="d-block">@tenQuyen</span>
+                                        </span>
+                                    </span>
+                                </button>
+                                <div class="dropdown-menu p-0">
+                                    <ul class="profile-dropdown">
+                                        <li>
+                                            <a href="@Url.Action("DangXuat", "DangNhap")"><i data-feather="log-out"></i> Đăng xuất</a>
+                                        </li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </li>
+                    </ul>
+                </div>
+                <div class="d-lg-none mobile-toggle pull-right"><i data-feather="more-horizontal"></i></div>
+            </div>
+        </div>
+    }
+}

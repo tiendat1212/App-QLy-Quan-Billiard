@@ -1,0 +1,22 @@
+﻿@model QuanLyQuanBilliard.Models.EF.NhanVien
+
+<div class="modal-body text-center">
+    <h4>Bạn có chắc chắn muốn xóa nhân viên @Model.TenNhanVien không?</h4>
+</div>
+<div class="modal-footer">
+    <form id="form-delete" asp-action="DeleteConfirmed" onsubmit="return jQueryAjaxPost(this)">
+        <input type="hidden" asp-for="NhanVienId" />
+        <input type="hidden" asp-for="TenNhanVien" />
+        <input type="hidden" asp-for="NgaySinh" />
+        <input type="hidden" asp-for="SoDienThoai" />
+        <input type="hidden" asp-for="Email" />
+        <input type="hidden" asp-for="ChucVu" />
+        <input type="hidden" asp-for="LuongCoBan" />
+        <input type="hidden" asp-for="NgayBatDauLam" />
+
+        <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" onclick="closeModal()">Đóng</button>
+            <button type="submit" class="btn btn-danger">Xóa</button>
+        </div>
+    </form>
+</div>

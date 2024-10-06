@@ -1,0 +1,17 @@
+﻿@model QuanLyQuanBilliard.Models.EF.TaiKhoan
+
+<div class="modal-body text-center">
+    <h4>Bạn có chắc chắn muốn xóa tài khoản @Model.TenDangNhap không?</h4>
+</div>
+<div class="modal-footer">
+    <form id="form-delete" asp-action="DeleteConfirmed" onsubmit="return jQueryAjaxPost(this)">
+        <input type="hidden" asp-for="TaiKhoanId" />
+        <input type="hidden" asp-for="TenDangNhap" />
+        <input type="hidden" asp-for="TenQuyen" />
+        <input type="hidden" asp-for="MatKhau" />
+        <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" onclick="closeModal()">Đóng</button>
+            <button type="submit" class="btn btn-danger">Xóa</button>
+        </div>
+    </form>
+</div>

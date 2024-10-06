@@ -1,0 +1,75 @@
+﻿@{
+    @using Microsoft.AspNetCore.Http
+    var tenQuyen = Context.Session.GetString("TenQuyen") ?? "Không xác định";
+    if(!tenQuyen.Equals("Tiếp Tân"))
+    {
+        <div class="page-sidebar iconcolor-sidebar">
+            <div class="main-header-left d-none d-lg-block">
+                <!-- Thay đổi logo thành Text "PKA Billiard" -->
+                <div class="logo-wrapper">
+                    <a href="/Home/Index">
+                        <span style="font-size: 24px; font-weight: bold; color: #fff;">PKA Billiard</span>
+                    </a>
+                </div>
+            </div>
+            <div class="sidebar custom-scrollbar">
+                <ul class="sidebar-menu">
+                    <!-- DashBoard -->
+                    <li>
+                        <a class="sidebar-header" href="/Home/Index">
+                            <i data-feather="home"></i><span> DashBoard</span>
+                        </a>
+                    </li>
+                    <!-- Đặt Bàn -->
+                    <li>
+                        <a class="sidebar-header" href="/DatBan/Index">
+                            <i data-feather="calendar"></i><span> Đặt Bàn</span>
+                        </a>
+                    </li>
+                    <!-- Hóa Đơn -->
+                    <li>
+                        <a class="sidebar-header" href="/HoaDon/Index">
+                            <i data-feather="file-text"></i><span> Hóa Đơn</span>
+                        </a>
+                    </li>
+                    <!-- Bàn -->
+                    <li>
+                        <a class="sidebar-header" href="/Ban/Index">
+                            <i data-feather="grid"></i><span> Bàn</span>
+                        </a>
+                    </li>
+                    <!-- Kho -->
+                    <li>
+                        <a class="sidebar-header" href="/Kho/Index">
+                            <i data-feather="archive"></i><span> Kho</span>
+                        </a>
+                    </li>
+                    <!-- Thẻ Thành Viên -->
+                    <li>
+                        <a class="sidebar-header" href="/TheThanhVien/Index">
+                            <i data-feather="credit-card"></i><span> Thẻ Thành Viên</span>
+                        </a>
+                    </li>
+                    <!-- Nhân Viên -->
+                    <li>
+                        <a class="sidebar-header" href="/NhanVien/Index">
+                            <i data-feather="users"></i><span> Nhân Viên</span>
+                        </a>
+                    </li>
+                    <!-- Lương -->
+                    <li>
+                        <a class="sidebar-header" href="/Luong/Index">
+                            <i data-feather="dollar-sign"></i><span> Lương</span>
+                        </a>
+                    </li>
+                    <!-- Tài Khoản -->
+                    <li>
+                        <a class="sidebar-header" href="/TaiKhoan/Index">
+                            <i data-feather="user"></i><span> Tài Khoản</span>
+                        </a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    }  
+}

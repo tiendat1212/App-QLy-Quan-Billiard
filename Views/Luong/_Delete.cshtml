@@ -1,0 +1,18 @@
+﻿@model QuanLyQuanBilliard.Models.EF.Luong
+
+<div class="modal-body text-center">
+    <h4>Bạn có chắc chắn muốn xóa lương tháng @Model.Thang của @Model.NhanVien?.TenNhanVien không?</h4>
+</div>
+<div class="modal-footer">
+    <form id="form-delete" asp-action="DeleteConfirmed" onsubmit="return jQueryAjaxPost(this)">
+        <input type="hidden" asp-for="LuongId" />
+        <input type="hidden" asp-for="NhanVienId" />
+        <input type="hidden" asp-for="Thang" />
+        <input type="hidden" asp-for="LuongCoBan" />
+        <input type="hidden" asp-for="Thuong" />
+        <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" onclick="closeModal()">Đóng</button>
+            <button type="submit" class="btn btn-danger">Xóa</button>
+        </div>
+    </form>
+</div>

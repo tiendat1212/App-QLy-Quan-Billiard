@@ -1,0 +1,219 @@
+﻿@{
+    ViewData["Title"] = "Thống kê hóa đơn";
+}
+<div class="page-body">
+    <div class="container-fluid">
+        <div class="container mt-4">
+            <!-- Dashboard hiển thị thông tin -->
+            <div class="row mb-4">
+                <div class="col-md-6">
+                    <div class="card text-center border border-dark"> 
+                        <div class="card-body">
+                            <h5 class="card-title">Số lượng bàn</h5>
+                            <h2 class="card-text">@ViewBag.SoBan</h2>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="card text-center border border-dark">
+                        <div class="card-body">
+                            <h5 class="card-title">Số lượng thẻ thành viên</h5>
+                            <h2 class="card-text">@ViewBag.SoTheThanhVien</h2>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="row mb-4">
+                <div class="col-md-12">
+                    <form class="form-inline justify-content-center">
+                        <div class="form-group mb-2 mr-2">
+                            <label for="startDate" class="mr-2">Từ ngày:</label>
+                            <input type="date" class="form-control" id="startDate" />
+                        </div>
+
+                        <div class="form-group mb-2 mr-2">
+                            <label for="endDate" class="mr-2">Đến ngày:</label>
+                            <input type="date" class="form-control" id="endDate" />
+                        </div>
+
+                        <div class="form-group mb-2 mr-2">
+                            <label for="filterType" class="mr-2">Lọc theo:</label>
+                            <select class="form-control" id="filterType">
+                                <option value="day">Theo Ngày</option>
+                                <option value="month">Theo Tháng</option>
+                                <option value="year">Theo Năm</option>
+                            </select>
+                        </div>
+
+                        <button type="button" class="btn btn-primary mb-2" onclick="filterData()">Lọc</button>
+                    </form>
+                </div>
+            </div>
+
+            <!-- Chọn loại biểu đồ -->
+            <div class="row mb-4">
+                <div class="col-md-12 text-center">
+                    <label class="mr-2">Chọn loại biểu đồ:</label>
+                    <div class="form-check form-check-inline">
+                        <input class="form-check-input" type="radio" name="chartType" value="bar" onclick="updateChartType('bar')">
+                        <label class="form-check-label" for="barChart">Biểu đồ cột</label>
+                    </div>
+                    <div class="form-check form-check-inline">
+                        <input class="form-check-input" type="radio" name="chartType" value="pie" checked onclick="updateChartType('pie')">
+                        <label class="form-check-label" for="pieChart">Biểu đồ tròn</label>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Biểu đồ hiển thị thống kê -->
+            <div class="row d-flex align-items-center text-center justify-content-center">
+                <div class="col-md-12 d-flex">
+                    <canvas id="barChart"></canvas>
+                </div>
+                <div class="col-md-12 d-flex" style="max-width: 570px; max-height: 570px;">
+                    <canvas id="pieChart"></canvas> 
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script type="text/javascript">
+        $(document).ready(function () {
+            var today = new Date();
+            var firstDayOfMonth = new Date(today.getFullYear(), today.getMonth(), 1).toISOString().split('T')[0];
+            var lastDayOfMonth = new Date(today.getFullYear(), today.getMonth() + 1, 0).toISOString().split('T')[0];
+
+            document.getElementById('startDate').value = firstDayOfMonth;
+            document.getElementById('endDate').value = lastDayOfMonth;
+
+            document.getElementById('filterType').value = 'month';
+
+            filterData(); 
+            updateChartType('pie'); 
+        });
+
+        // Khởi tạo biểu đồ cột (Bar Chart)
+        var barCtx = document.getElementById('barChart').getContext('2d');
+        var barChart = new Chart(barCtx, {
+            type: 'bar',
+            data: {
+                labels: [],
+                datasets: [
+                    {
+                        label: 'Tổng doanh thu',
+                        data: [],
+                        backgroundColor: 'rgba(54, 162, 235, 0.2)',
+                        borderColor: 'rgba(54, 162, 235, 1)',
+                        borderWidth: 1
+                    },
+                    {
+                        label: 'Tổng nhập',
+                        data: [],
+                        backgroundColor: 'rgba(255, 206, 86, 0.2)',
+                        borderColor: 'rgba(255, 206, 86, 1)',
+                        borderWidth: 1
+                    },
+                    {
+                        label: 'Tổng bán',
+                        data: [],
+                        backgroundColor: 'rgba(75, 192, 192, 0.2)',
+                        borderColor: 'rgba(75, 192, 192, 1)',
+                        borderWidth: 1
+                    },
+                    {
+                        label: 'Lợi nhuận',
+                        data: [],
+                        backgroundColor: 'rgba(153, 102, 255, 0.2)',
+                        borderColor: 'rgba(153, 102, 255, 1)',
+                        borderWidth: 1
+                    }
+                ]
+            },
+            options: {
+                scales: {
+                    y: {
+                        beginAtZero: true
+                    }
+                }
+            }
+        });
+
+        // Khởi tạo biểu đồ tròn (Pie Chart)
+        var pieCtx = document.getElementById('pieChart').getContext('2d');
+
+        var pieChart = new Chart(pieCtx, {
+            type: 'pie',
+            data: {
+                labels: ['Tổng Doanh Thu', 'Tổng nhập', 'Lợi nhuận'],
+                datasets: [{
+                    data: [0, 0, 0], 
+                    backgroundColor: [
+                        'rgba(54, 162, 235, 0.2)',
+                        'rgba(255, 206, 86, 0.2)',
+                        'rgba(153, 102, 255, 0.2)'
+                    ],
+                    borderColor: [
+                        'rgba(54, 162, 235, 1)',
+                        'rgba(255, 206, 86, 1)',
+                        'rgba(153, 102, 255, 1)'
+                    ],
+                    borderWidth: 1
+                }]
+            }
+        });
+
+        // Hàm gọi lọc dữ liệu
+        function filterData() {
+            var startDate = document.getElementById('startDate').value;
+            var endDate = document.getElementById('endDate').value;
+            var filterType = document.getElementById('filterType').value;
+
+            if (startDate && endDate && filterType) {
+                $.ajax({
+                    url: '@Url.Action("FilterData", "Home")',
+                    type: 'POST',
+                    data: {
+                        startDate: startDate,
+                        endDate: endDate,
+                        filterType: filterType
+                    },
+                    success: function (response) {
+                        // Cập nhật biểu đồ cột
+                        barChart.data.labels = response.labels;
+                        barChart.data.datasets[0].data = response.tongTien;
+                        barChart.data.datasets[1].data = response.giaNhap;
+                        barChart.data.datasets[2].data = response.giaBan;
+                        barChart.data.datasets[3].data = response.loiNhuan;
+                        barChart.update();
+
+                        // Cập nhật biểu đồ tròn
+                        var totalRevenue = response.tongTien.reduce((a, b) => a + b, 0); 
+                        var totalCost = response.giaNhap.reduce((a, b) => a + b, 0); 
+                        var totalProfit = totalRevenue - totalCost; 
+                        pieChart.data.datasets[0].data = [totalRevenue, totalCost, totalProfit];
+                        pieChart.update();
+                    },
+                    error: function () {
+                        alert('Đã xảy ra lỗi khi lọc dữ liệu.');
+                    }
+                });
+            } else {
+                alert('Vui lòng chọn ngày bắt đầu, ngày kết thúc và loại lọc.');
+            }
+        }
+
+        // Hàm cập nhật loại biểu đồ
+        function updateChartType(chartType) {
+            if (chartType === 'bar') {
+                document.getElementById('barChart').style.display = 'block';
+                document.getElementById('pieChart').style.display = 'none';
+            } else {
+                document.getElementById('barChart').style.display = 'none';
+                document.getElementById('pieChart').style.display = 'block';
+            }
+        }
+    </script>
+}

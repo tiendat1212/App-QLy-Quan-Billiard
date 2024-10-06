@@ -1,0 +1,44 @@
+﻿@model QuanLyQuanBilliard.Models.EF.TaiKhoan
+
+<form id="form-create-edit" asp-action="Save" method="post" onsubmit="return jQueryAjaxPost(this)">
+    <input type="hidden" asp-for="TaiKhoanId" />
+
+    <div class="form-group">
+        <label for="TenDangNhap">Tên Đăng Nhập</label>
+        <input asp-for="TenDangNhap" class="form-control" required />
+    </div>
+
+    @if (Model.TaiKhoanId == 0) 
+    {
+        <div class="form-group">
+            <label for="MatKhau">Mật Khẩu</label>
+            <input asp-for="MatKhau" type="password" class="form-control" required />
+        </div>
+    }
+    else 
+    {
+        <div class="form-group">
+            <label for="MatKhau">Mật Khẩu</label>
+            <input asp-for="MatKhau" type="password" class="form-control" placeholder="Để trống nếu không thay đổi" />
+        </div>
+    }
+
+    <div class="form-group">
+        <label for="TenQuyen">Quyền</label>
+        <select asp-for="TenQuyen" class="form-control" required>
+            <option value="Tiếp Tân">Tiếp Tân</option>
+            <option value="Quản Lý">Quản Lý</option>
+        </select>
+    </div>
+
+    <div class="form-group">
+        <label for="NhanVienId">Nhân Viên</label>
+        <select asp-for="NhanVienId" class="form-control" asp-items="@(new SelectList(ViewBag.NhanVienList, "NhanVienId", "TenNhanVien"))" required>
+        </select>
+    </div>
+
+    <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" onclick="closeModal()">Đóng</button>
+        <button type="submit" class="btn btn-primary">Lưu</button>
+    </div>
+</form>

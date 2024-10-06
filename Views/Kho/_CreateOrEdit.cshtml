@@ -1,0 +1,30 @@
+﻿@model QuanLyQuanBilliard.Models.EF.Kho
+
+<form id="form-create-edit" asp-action="Save" method="post" onsubmit="return jQueryAjaxPost(this)">
+    <input type="hidden" asp-for="IdMatHang" />
+
+    <div class="form-group">
+        <label for="TenMatHang">Tên Mặt Hàng</label>
+        <input asp-for="TenMatHang" class="form-control" required />
+    </div>
+
+    <div class="form-group">
+        <label for="SoLuong">Số Lượng</label>
+        <input asp-for="SoLuong" class="form-control" type="number" step="1" required />
+    </div>
+
+    <div class="form-group">
+        <label for="GiaNhap">Giá Nhập</label>
+        <input asp-for="GiaNhap" class="form-control" type="number" step="1" required />
+    </div>
+
+    <div class="form-group">
+        <label for="GiaBan">Giá Bán</label>
+        <input asp-for="GiaBan" class="form-control" type="number" step="1" required />
+    </div>
+
+    <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" onclick="closeModal()">Đóng</button>
+        <button type="submit" class="btn btn-primary">Lưu</button>
+    </div>
+</form>

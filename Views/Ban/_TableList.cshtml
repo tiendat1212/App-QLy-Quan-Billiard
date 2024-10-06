@@ -1,0 +1,22 @@
+﻿@model IEnumerable<QuanLyQuanBilliard.Models.EF.Ban>
+
+@foreach (var item in Model)
+{
+    <tr>
+        <td>@item.TenBan</td>
+        <td>
+            <span class="badge @(item.TrangThai == "Trống" ? "bg-success" :
+                               item.TrangThai == "Đang sử dụng" ? "bg-warning" :
+                               item.TrangThai == "Đang hư hỏng" ? "bg-danger" : "")">
+                @item.TrangThai
+            </span>
+        </td>
+        <td>@item.GiaGio.ToString("#,0")</td>
+        <td>@item.NgayTao.ToString("dd/MM/yyyy")</td>
+        <td>@item.NgayCapNhap.ToString("dd/MM/yyyy")</td>
+        <td>
+            <button class="btn btn-success btn-xs" onclick="showInPopup('@Url.Action("CreateOrEdit", "Ban", new { id = item.BanId })', 'Cập Nhật Bàn')">Cập Nhật</button>
+            <button class="btn btn-danger btn-xs" onclick="loadDeleteModal('@Url.Action("Delete", "Ban", new { id = item.BanId })')">Xóa</button>
+        </td>
+    </tr>
+}

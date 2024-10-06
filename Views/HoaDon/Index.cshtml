@@ -1,0 +1,226 @@
+﻿@model IEnumerable<QuanLyQuanBilliard.Models.EF.HoaDon>
+@{
+    ViewData["Title"] = "Quản Lý Hóa Hơn";
+}
+
+<div class="page-body">
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-sm-12">
+                <div class="card">
+                    <div class="card-header d-flex justify-content-between">
+                        <h5>Danh Sách Hóa Đơn</h5>
+                        <button class="btn btn-primary" onclick="showInPopup('@Url.Action("CreateOrEdit", "HoaDon")', 'Thêm Hóa Đơn')">Thêm Hóa Đơn</button>
+                    </div>
+                    <div class="card-body">
+                        <div class="table-responsive product-table">
+                            <table class="display" id="basic-1">
+                                <thead>
+                                    <tr>
+                                        <th>Tên Bàn</th>
+                                        <th>Giờ Bắt Đầu</th>
+                                        <th>Giờ Kết Thúc</th>
+                                        <th>Tổng Tiền</th>
+                                        <th>Trạng Thái</th>
+                                        <th>Ngày Lập</th>
+                                        <th>Hành Động</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="tableBody">
+                                    @await Html.PartialAsync("_TableList", Model)
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Hộp thoại xác nhận xóa -->
+<div class="modal fade" id="deleteConfirmModal" tabindex="-1" aria-labelledby="deleteConfirmModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="deleteConfirmModalLabel">Xác Nhận Thanh Toán</h5>
+            </div>
+            <div class="modal-body">
+                <!-- Nội dung được tải qua AJAX -->
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Hộp thoại cho Tạo/Sửa -->
+<div class="modal fade" id="formModal" tabindex="-1" aria-labelledby="formModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="formModalLabel">Tiêu đề Modal</h5>
+            </div>
+            <div class="modal-body">
+                <!-- Nội dung được tải qua AJAX -->
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    // Hiện hộp thoại cho Tạo/Sửa
+    function showInPopup(url, title) {
+        $('#formModal .modal-title').html(title);
+        $.get(url, function (data) {
+            $('#formModal .modal-body').html(data);
+            $('#formModal').modal('show');
+            var selectedBanId = $("select[name='BanId']").val();
+            if (selectedBanId) {
+                getGiaGio(selectedBanId);
+            }
+
+        }).fail(function () {
+            showNotification('Tải nội dung không thành công. Vui lòng thử lại.', 'danger');
+        });
+    }
+
+    // Tải hộp thoại xác nhận xóa
+    function loadDeleteModal(url) {
+        $.get(url, function (data) {
+            $('#deleteConfirmModal .modal-body').html(data);
+            $('#deleteConfirmModal').modal('show');
+        }).fail(function () {
+            showNotification('Tải xác nhận xóa không thành công. Vui lòng thử lại.', 'danger');
+        });
+    }
+
+    // AJAX Post cho các biểu mẫu
+    function jQueryAjaxPost(form) {
+        $.ajax({
+            type: 'POST',
+            url: form.action,
+            data: $(form).serialize(),
+            success: function (response) {
+                if (response.isValid) {
+                    closeModal();
+                    loadTable();
+                    showNotification(response.message, 'success');
+                } else {
+                    showNotification(response.message, 'danger');
+                }
+            },
+            error: function (xhr, status, error) {
+                showNotification('Đã xảy ra lỗi: ' + error, 'danger');
+            }
+        });
+
+        return false;
+    }
+
+    // Tải lại nội dung bảng đã cập nhật
+    function loadTable() {
+        $.get('@Url.Action("GetTableList", "HoaDon")', function (data) {
+            $('#tableBody').html(data);
+        }).fail(function () {
+            showNotification('Tải dữ liệu bảng không thành công. Vui lòng thử lại.', 'danger');
+        });
+    }
+
+    // Hàm để đóng hộp thoại
+    function closeModal() {
+        $('#deleteConfirmModal').modal('hide');
+        $('#formModal').modal('hide');
+    }
+
+    function getGiaGio(banId) {
+        var hoaDonId = document.getElementById("HoaDonId").value;
+        if (banId) {
+            $.ajax({
+                url: '/HoaDon/GetGiaGio',
+                type: 'GET',
+                data: { banId: banId, hoaDonId: hoaDonId},
+                success: function (data) {
+                    if (data.success) {
+                        $('#GiaGio').val(data.giaGio);
+                    }else
+                    {
+                        showNotification(data.message, 'danger');
+                        $('#GiaGio').val("");
+                        $('#BanId').val("");
+                    }
+                },
+                error: function () {
+                    showNotification('Đã xảy ra lỗi khi lấy giá giờ.', 'danger');
+                }
+            });
+        }
+    }
+    function addItem() {
+        var select = document.getElementById("selectKho");
+        var selectedValue = select.value;
+        if (selectedValue) {
+            $.ajax({
+                url: '/HoaDon/GetKho',
+                type: 'GET',
+                data: { khoId: selectedValue },
+                success: function (data) {
+                    if (data.success) {
+                        var kho = data.kho;
+                        var tableBody = document.getElementById("chiTietHoaDonTable");
+                        var rowCount = tableBody.rows.length;
+
+                        // Tạo một hàng mới
+                        var newRow = `<tr id="row-${rowCount}">
+                            <td>
+                                ${kho.tenMatHang}
+                                <input type="hidden" name="hoaDonChiTiets[${rowCount}].IdKho" value="${kho.idMatHang}" />
+                                <input type="hidden" name="hoaDonChiTiets[${rowCount}].GiaNhap" value="${kho.giaNhap}" />
+                            </td>
+                            <td>
+                                <input type="number" class="form-control" name="hoaDonChiTiets[${rowCount}].SoLuong" value="1" min="1" required onchange="checkStock(this, ${kho.soLuong})" />
+                            </td>
+                            <td>
+                                <input type="number" class="form-control" name="hoaDonChiTiets[${rowCount}].GiaBan" value="${kho.giaBan}" readonly />
+                            </td>
+                            <td>
+                                <button type="button" class="btn btn-danger" onclick="removeItem(${rowCount})">Xóa</button>
+                            </td>
+                        </tr>`;
+                        tableBody.insertAdjacentHTML('beforeend', newRow);
+                        select.value = "";
+                    }
+                },
+                error: function () {
+                    showNotification("Lỗi", 'danger');
+                }
+            });
+        }
+    }
+
+    function checkStock(input, availableStock) {
+        var quantity = parseInt(input.value, 10);
+        if (quantity > availableStock) {
+            showNotification('Số lượng yêu cầu vượt quá số lượng trong kho.', 'danger');
+            input.value = availableStock;
+        }
+    }
+
+    function removeItem(index) {
+        var row = document.getElementById(`row-${index}`);
+        if (row) {
+            row.remove();
+        }
+    }
+    // Hàm hiển thị thông báo
+    function showNotification(message, type) {
+        $('#notification')
+            .removeClass('alert-success alert-danger')
+            .addClass('alert-' + type)
+            .html(message)
+            .fadeIn();
+
+        // Tự động tắt thông báo sau 5 giây
+        setTimeout(function () {
+            $('#notification').fadeOut();
+        }, 1000);
+    }
+</script>

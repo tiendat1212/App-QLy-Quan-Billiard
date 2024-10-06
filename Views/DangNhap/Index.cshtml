@@ -1,0 +1,124 @@
+﻿@{
+    Layout = null;
+}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Creative admin is super flexible, powerful, clean &amp; modern responsive bootstrap 4 admin template with unlimited possibilities.">
+    <meta name="keywords" content="admin template, Creative admin template, dashboard template, flat admin template, responsive admin template, web app">
+    <meta name="author" content="pixelstrap">
+    <link rel="icon" href="~/assets/images/favicon.png" type="image/x-icon">
+    <link rel="shortcut icon" href="~/assets/images/favicon.png" type="image/x-icon">
+    <title>PKA Billiards</title>
+    <!-- Font Awesome-->
+    <link rel="stylesheet" type="text/css" href="~/assets/css/fontawesome.css">
+    <!-- Feather icon-->
+    <link rel="stylesheet" type="text/css" href="~/assets/css/feather-icon.css">
+    <!-- Bootstrap css-->
+    <link rel="stylesheet" type="text/css" href="~/assets/css/bootstrap.css">
+    <!-- App css-->
+    <link rel="stylesheet" type="text/css" href="~/assets/css/style.css">
+    <link id="color" rel="stylesheet" href="~/assets/css/light-1.css" media="screen">
+</head>
+<body>
+    <!-- Loader starts-->
+    <div class="loader-wrapper">
+        <div class="loader loader-7">
+            <div class="line line1"></div>
+            <div class="line line2"></div>
+            <div class="line line3"></div>
+        </div>
+    </div>
+    <!-- Loader ends-->
+    <!-- Notification Alert -->
+    <div id="notification" class="alert alert-primary dark" role="alert" style="display: none; position: fixed; top: 20px; right: 20px; z-index: 1050;"></div>
+
+    <!-- page-wrapper Start-->
+    <div class="page-wrapper">
+        <div class="container-fluid p-0">
+            <!-- login page start-->
+            <div class="authentication-main m-0 d-flex justify-content-center align-items-center" style="height: 100vh;">
+                <div class="row w-100">
+                    <div class="col-md-12">
+                        <div class="authentication-box login-box-centered" style="width: 30%; margin: 0 auto;">
+                            <div class="card-body h-100-d-center">
+                                <div class="cont b-light">
+                                    <form class="theme-form" method="post" id="loginForm">
+                                        <h4 style="text-align: center">Đăng Nhập</h4>
+                                        <div class="form-group">
+                                            <label class="col-form-label pt-0">Tên Đăng Nhập</label>
+                                            <input class="form-control" type="text" name="tenDangNhap" required="">
+                                        </div>
+                                        <div class="form-group">
+                                            <label class="col-form-label">Mật Khẩu</label>
+                                            <input class="form-control" type="password" name="matKhau" required="">
+                                        </div>
+                                        <div class="form-group form-row mt-3 mb-0">
+                                            <button class="btn btn-primary btn-block" type="submit">ĐĂNG NHẬP</button>
+                                        </div>
+                                    </form>
+
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!-- login page end-->
+        </div>
+    </div>
+
+    <!-- latest jquery-->
+    <script src="~/assets/js/jquery-3.2.1.min.js"></script>
+
+    <script>
+        $(document).ready(function () {
+            $('#loginForm').on('submit', function (event) {
+                event.preventDefault();
+
+                $.ajax({
+                    type: 'POST',
+                    url: '@Url.Action("DangNhap", "DangNhap")',
+                    data: $(this).serialize(),
+                    success: function (response) {
+                        if (response.success) {
+                            $('#notification').removeClass('alert-danger').addClass('alert-success');
+                            $('#notification').text(response.message).fadeIn();
+                            window.location.href = response.redirectUrl;
+
+                        } else {
+                            $('#notification').removeClass('alert-success').addClass('alert-danger');
+                            $('#notification').text(response.message).fadeIn();
+                        }
+
+                        setTimeout(function () {
+                            $('#notification').fadeOut();
+                        }, 1000);
+                    },
+                    error: function () {
+                        $('#notification').removeClass('alert-success').addClass('alert-danger');
+                        $('#notification').text('Đã xảy ra lỗi. Vui lòng thử lại sau.').fadeIn();
+                        setTimeout(function () {
+                            $('#notification').fadeOut();
+                        }, 1000);
+                    }
+                });
+            });
+        });
+    </script>
+    <!-- Bootstrap js-->
+    <script src="~/assets/js/bootstrap/popper.min.js"></script>
+    <script src="~/assets/js/bootstrap/bootstrap.js"></script>
+    <!-- feather icon js-->
+    <script src="~/assets/js/icons/feather-icon/feather.min.js"></script>
+    <!-- Plugins JS start-->
+    <script src="~/assets/js/login.js"></script>
+    <!-- Plugins JS Ends-->
+    <!-- Theme js-->
+    <script src="~/assets/js/script.js"></script>
+
+</body>
+</html>
